@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07T03:45:25.754415+00:00",
+  "updated": "2026-10-07T03:55:14.954131+00:00",
   "outputs": [
     {
       "id": "o0001",
@@ -29,60 +29,6 @@
       "summary": "Conway 生命游戏，可调规则/边界/突变，密度熵统计"
     },
     {
-      "id": "o0004",
-      "ts": "2026-10-07T02:33:01.593882+00:00",
-      "project": "自动化",
-      "title": "GPT 自动化总方案 v1.0",
-      "type": "report",
-      "url": "https://chatgpt.com/c/6ac5a786-5054-83ea-bc67-075e8d3b10bd",
-      "summary": "28 工作流+信号门+ROI 三档，Lucas 已批准，shadow 实施中"
-    },
-    {
-      "id": "o0005",
-      "ts": "2026-10-07T02:33:01.651581+00:00",
-      "project": "赚钱线",
-      "title": "Newsletter 第 4 期",
-      "type": "report",
-      "url": "",
-      "summary": "1467 词，已验收"
-    },
-    {
-      "id": "o0006",
-      "ts": "2026-10-07T02:33:01.704246+00:00",
-      "project": "赚钱线",
-      "title": "《Python for Excel Users》第一、二章",
-      "type": "report",
-      "url": "",
-      "summary": "1808+1961 词，数据集+真实执行验证"
-    },
-    {
-      "id": "o0007",
-      "ts": "2026-10-07T02:33:01.763696+00:00",
-      "project": "赚钱线",
-      "title": "Reporting Pack 4 组合包",
-      "type": "file",
-      "url": "",
-      "summary": "9 模板，SHA256 15/15 校验通过，待上架"
-    },
-    {
-      "id": "o0008",
-      "ts": "2026-10-07T02:33:01.834991+00:00",
-      "project": "Living World",
-      "title": "世界一 Day 5",
-      "type": "file",
-      "url": "",
-      "summary": "3998 词，63 账本事件全覆盖"
-    },
-    {
-      "id": "o0009",
-      "ts": "2026-10-07T02:33:02.006923+00:00",
-      "project": "基础设施",
-      "title": "浏览器登录态全恢复",
-      "type": "note",
-      "url": "",
-      "summary": "claude.ai/chatgpt.com/deepseek.com/google.com 全部登着"
-    },
-    {
       "id": "outputs-hub:r1",
       "ts": "2026-10-07T02:47:54.146704+00:00",
       "project": "基础设施",
@@ -90,24 +36,6 @@
       "type": "site",
       "url": "https://outputs-hub.lwz2993402451.chatgpt.site",
       "summary": "实时产出看板：feed 流+项目筛选+5分钟自刷新+失败缓存，GPT 评审 5 条全落实"
-    },
-    {
-      "id": "test:link1",
-      "ts": "2026-10-07T03:45:02.411778+00:00",
-      "project": "测试",
-      "title": "链路验证测试项",
-      "type": "site",
-      "url": "https://example.com/test1",
-      "summary": "验证登记→同步→看板链路"
-    },
-    {
-      "id": "test:link2",
-      "ts": "2026-10-07T03:45:25.735738+00:00",
-      "project": "测试",
-      "title": "链路验证测试项 v2（实质更新）",
-      "type": "site",
-      "url": "https://example.com/test1",
-      "summary": "同一 URL 的实质更新，用新 ID"
     }
   ]
 }
