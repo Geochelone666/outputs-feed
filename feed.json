@@ -1,0 +1,95 @@
+{
+  "updated": "2026-10-07T02:33:02.006923+00:00",
+  "outputs": [
+    {
+      "id": "o0001",
+      "ts": "2026-10-07T02:33:01.402078+00:00",
+      "project": "Sites",
+      "title": "S15 Utility Box 交工",
+      "type": "site",
+      "url": "https://s15-utility-box.lwz2993402451.chatgpt.site",
+      "summary": "6 个 bug 修掉（4 个英文报错改中文），输入验证+空状态补齐，已验证",
+      "sensitive": false
+    },
+    {
+      "id": "o0002",
+      "ts": "2026-10-07T02:33:01.453138+00:00",
+      "project": "Sites",
+      "title": "S14 Decision Lab 交工",
+      "type": "site",
+      "url": "https://s14-decision-lab-new.lwz2993402451.chatgpt.site/",
+      "summary": "10 个计算器全验证通过，5 个模板，1 个轻微 bug 留下轮",
+      "sensitive": false
+    },
+    {
+      "id": "o0003",
+      "ts": "2026-10-07T02:33:01.509288+00:00",
+      "project": "Sites",
+      "title": "S13 Emergence Lab 首建",
+      "type": "site",
+      "url": "https://s13-emergence-laboratory.lwz2993402451.chatgpt.site",
+      "summary": "Conway 生命游戏，可调规则/边界/突变，密度熵统计",
+      "sensitive": false
+    },
+    {
+      "id": "o0004",
+      "ts": "2026-10-07T02:33:01.593882+00:00",
+      "project": "自动化",
+      "title": "GPT 自动化总方案 v1.0",
+      "type": "report",
+      "url": "https://chatgpt.com/c/6ac5a786-5054-83ea-bc67-075e8d3b10bd",
+      "summary": "28 工作流+信号门+ROI 三档，Lucas 已批准，shadow 实施中",
+      "sensitive": false
+    },
+    {
+      "id": "o0005",
+      "ts": "2026-10-07T02:33:01.651581+00:00",
+      "project": "赚钱线",
+      "title": "Newsletter 第 4 期",
+      "type": "report",
+      "url": "",
+      "summary": "1467 词，已验收",
+      "sensitive": false
+    },
+    {
+      "id": "o0006",
+      "ts": "2026-10-07T02:33:01.704246+00:00",
+      "project": "赚钱线",
+      "title": "《Python for Excel Users》第一、二章",
+      "type": "report",
+      "url": "",
+      "summary": "1808+1961 词，数据集+真实执行验证",
+      "sensitive": false
+    },
+    {
+      "id": "o0007",
+      "ts": "2026-10-07T02:33:01.763696+00:00",
+      "project": "赚钱线",
+      "title": "Reporting Pack 4 组合包",
+      "type": "file",
+      "url": "",
+      "summary": "9 模板，SHA256 15/15 校验通过，待上架",
+      "sensitive": false
+    },
+    {
+      "id": "o0008",
+      "ts": "2026-10-07T02:33:01.834991+00:00",
+      "project": "Living World",
+      "title": "世界一 Day 5",
+      "type": "file",
+      "url": "",
+      "summary": "3998 词，63 账本事件全覆盖",
+      "sensitive": false
+    },
+    {
+      "id": "o0009",
+      "ts": "2026-10-07T02:33:02.006923+00:00",
+      "project": "基础设施",
+      "title": "浏览器登录态全恢复",
+      "type": "note",
+      "url": "",
+      "summary": "claude.ai/chatgpt.com/deepseek.com/google.com 全部登着",
+      "sensitive": false
+    }
+  ]
+}
