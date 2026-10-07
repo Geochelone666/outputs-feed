@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07T02:47:54.148062+00:00",
+  "updated": "2026-10-07T03:45:02.413359+00:00",
   "outputs": [
     {
       "id": "o0001",
@@ -90,6 +90,15 @@
       "type": "site",
       "url": "https://outputs-hub.lwz2993402451.chatgpt.site",
       "summary": "实时产出看板：feed 流+项目筛选+5分钟自刷新+失败缓存，GPT 评审 5 条全落实"
+    },
+    {
+      "id": "test:link1",
+      "ts": "2026-10-07T03:45:02.411778+00:00",
+      "project": "测试",
+      "title": "链路验证测试项",
+      "type": "site",
+      "url": "https://example.com/test1",
+      "summary": "验证登记→同步→看板链路"
     }
   ]
 }
