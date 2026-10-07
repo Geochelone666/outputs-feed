@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07T20:20:11.491164+00:00",
+  "updated": "2026-10-07T20:23:04.618806+00:00",
   "outputs": [
     {
       "id": "o0001",
@@ -39,12 +39,12 @@
     },
     {
       "id": "ebook2:v1",
-      "ts": "2026-10-07T20:20:11.484742+00:00",
+      "ts": "2026-10-07T20:23:04.613047+00:00",
       "project": "ebook2",
       "title": "Python for Excel Users",
       "type": "file",
-      "url": "file:///home/hatch/workspace/ebooks/python-for-excel-users/build/PYTHON_FOR_EXCEL_USERS.pdf",
-      "summary": "12章PDF(81页)+EPUB，前言1026词，Gumroad文案，4定价"
+      "url": "",
+      "summary": "12章PDF+EPUB"
     }
   ]
 }
