@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07T03:45:02.413359+00:00",
+  "updated": "2026-10-07T03:45:25.754415+00:00",
   "outputs": [
     {
       "id": "o0001",
@@ -99,6 +99,15 @@
       "type": "site",
       "url": "https://example.com/test1",
       "summary": "验证登记→同步→看板链路"
+    },
+    {
+      "id": "test:link2",
+      "ts": "2026-10-07T03:45:25.735738+00:00",
+      "project": "测试",
+      "title": "链路验证测试项 v2（实质更新）",
+      "type": "site",
+      "url": "https://example.com/test1",
+      "summary": "同一 URL 的实质更新，用新 ID"
     }
   ]
 }
