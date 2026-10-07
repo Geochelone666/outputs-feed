@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-07T06:54:53.670547+00:00",
+  "updated": "2026-10-07T20:20:11.491164+00:00",
   "outputs": [
     {
       "id": "o0001",
@@ -36,6 +36,15 @@
       "type": "site",
       "url": "https://outputs-hub.lwz2993402451.chatgpt.site",
       "summary": "实时产出看板：feed 流+项目筛选+5分钟自刷新+失败缓存，GPT 评审 5 条全落实"
+    },
+    {
+      "id": "ebook2:v1",
+      "ts": "2026-10-07T20:20:11.484742+00:00",
+      "project": "ebook2",
+      "title": "Python for Excel Users",
+      "type": "file",
+      "url": "file:///home/hatch/workspace/ebooks/python-for-excel-users/build/PYTHON_FOR_EXCEL_USERS.pdf",
+      "summary": "12章PDF(81页)+EPUB，前言1026词，Gumroad文案，4定价"
     }
   ]
 }
