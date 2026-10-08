@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-08T11:53:31Z",
+  "updated_utc": "2026-10-08T11:54:04Z",
   "vms": [
     {
       "name": "atlas",
@@ -31,6 +31,6 @@
     "total": 56,
     "public": 0
   },
-  "world2_soak_tick": 6602200,
+  "world2_soak_tick": 6605300,
   "shadow_last_run": "2026-10-08T11:35:53Z"
 }
