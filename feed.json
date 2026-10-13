@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13T15:44:23.383755+00:00",
+  "updated": "2026-10-13T23:04:44.445369+00:00",
   "outputs": [
     {
       "id": "proc-supplier-report-v2",
@@ -9,6 +9,15 @@
       "type": "link",
       "url": "https://lwzcreations.gumroad.com/l/jhqxjs",
       "summary": "GPT复评8.0/10 Go后上架：基于30643条联邦中标记录的供应商历史情报报告，CAD 99/份定制"
+    },
+    {
+      "id": "proc-supplier-report-v2.1",
+      "ts": "2026-10-13T23:04:44.442243+00:00",
+      "project": "procurement-intel",
+      "title": "Federal Supplier Intelligence Report v2.1",
+      "type": "link",
+      "url": "https://lwzcreations.gumroad.com/l/jhqxjs",
+      "summary": "加拿大联邦供应商情报报告 v2.1，CAD$99，新增 Key insights 和 Peer benchmark"
     }
   ]
 }
