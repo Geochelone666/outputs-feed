@@ -1,4 +1,14 @@
 {
-  "updated": "2026-10-08T05:58:52.655699+00:00",
-  "outputs": []
+  "updated": "2026-10-13T15:44:23.383755+00:00",
+  "outputs": [
+    {
+      "id": "proc-supplier-report-v2",
+      "ts": "2026-10-13T15:44:23.377679+00:00",
+      "project": "procurement-intel",
+      "title": "Federal Supplier Intelligence Report (CAD 99)",
+      "type": "link",
+      "url": "https://lwzcreations.gumroad.com/l/jhqxjs",
+      "summary": "GPT复评8.0/10 Go后上架：基于30643条联邦中标记录的供应商历史情报报告，CAD 99/份定制"
+    }
+  ]
 }
