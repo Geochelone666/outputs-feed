@@ -115,6 +115,29 @@ class Directory(unittest.TestCase):
             self.assertTrue(any("invalid JSON" in e for e in errors))
             self.assertEqual(v.main(["validate.py", d]), 1)
 
+    def test_null_snapshots_are_not_treated_as_missing_validation(self):
+        for target in ("feed.json", "live-status.json"):
+            with self.subTest(target=target), tempfile.TemporaryDirectory() as d:
+                self.write(d, json.dumps(FEED), json.dumps(STATUS))
+                (Path(d) / target).write_text("null", encoding="utf-8")
+                errors, _ = v.validate_dir(d)
+                self.assertTrue(any(target in e and "object" in e for e in errors))
+
+    def test_nonfinite_numbers_are_rejected_as_invalid_json(self):
+        for value in ("NaN", "Infinity", "-Infinity", "1e999"):
+            with self.subTest(value=value), tempfile.TemporaryDirectory() as d:
+                status = json.dumps(STATUS).replace('"load1": 0.1', '"load1": ' + value)
+                self.write(d, json.dumps(FEED), status)
+                errors, _ = v.validate_dir(d)
+                self.assertTrue(any("invalid JSON" in e for e in errors))
+
+    def test_invalid_utf8_is_reported_without_a_traceback(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.write(d, json.dumps(FEED), json.dumps(STATUS))
+            (Path(d) / "feed.json").write_bytes(b'\xff')
+            errors, _ = v.validate_dir(d)
+            self.assertTrue(any("feed.json" in e and "cannot read" in e for e in errors))
+
     def test_public_count_mismatch_is_only_a_warning(self):
         with tempfile.TemporaryDirectory() as d:
             s = dict(STATUS, outputs={"total": 5, "public": 3})

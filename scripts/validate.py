@@ -10,6 +10,7 @@ Usage: python3 scripts/validate.py [REPO_DIR]
 Exit status: 0 valid (warnings may be printed), 1 errors found.
 """
 import json
+import math
 import re
 import sys
 from datetime import datetime
@@ -29,6 +30,7 @@ LEAK_PATTERNS = [
 ]
 
 MEM_RE = re.compile(r"^\d+/\d+$")
+LOAD_FAILED = object()
 
 
 def parse_dt(value):
@@ -47,7 +49,8 @@ def is_int(v):
 
 
 def is_num(v):
-    return isinstance(v, (int, float)) and not isinstance(v, bool)
+    return (isinstance(v, (int, float)) and not isinstance(v, bool)
+            and (not isinstance(v, float) or math.isfinite(v)))
 
 
 def nonempty_str(v):
@@ -160,17 +163,28 @@ def cross_warnings(feed, status):
     return warnings
 
 
+def reject_constant(value):
+    raise ValueError(f"non-standard numeric constant {value}")
+
+
+def finite_float(value):
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError("numeric value exceeds finite float range")
+    return number
+
+
 def load(path, errors):
     try:
         raw = path.read_text(encoding="utf-8")
-    except OSError as e:
+    except (OSError, UnicodeError) as e:
         errors.append(f"{path.name}: cannot read: {e}")
-        return None, ""
+        return LOAD_FAILED, ""
     try:
-        return json.loads(raw), raw
+        return json.loads(raw, parse_constant=reject_constant, parse_float=finite_float), raw
     except ValueError as e:
         errors.append(f"{path.name}: invalid JSON: {e}")
-        return None, raw
+        return LOAD_FAILED, raw
 
 
 def validate_dir(root):
@@ -178,13 +192,13 @@ def validate_dir(root):
     errors, warnings = [], []
     feed, feed_raw = load(root / "feed.json", errors)
     status, status_raw = load(root / "live-status.json", errors)
-    if feed is not None:
+    if feed is not LOAD_FAILED:
         errors += validate_feed(feed)
         check_leaks("feed.json", feed_raw, errors)
-    if status is not None:
+    if status is not LOAD_FAILED:
         errors += validate_status(status)
         check_leaks("live-status.json", status_raw, errors)
-    if feed is not None and status is not None:
+    if feed is not LOAD_FAILED and status is not LOAD_FAILED:
         warnings += cross_warnings(feed, status)
     return errors, warnings
 
