@@ -190,14 +190,15 @@ def load(path, errors):
 def validate_dir(root):
     root = Path(root)
     errors, warnings = [], []
-    feed, feed_raw = load(root / "feed.json", errors)
-    status, status_raw = load(root / "live-status.json", errors)
+    feed, _ = load(root / "feed.json", errors)
+    status, _ = load(root / "live-status.json", errors)
     if feed is not LOAD_FAILED:
         errors += validate_feed(feed)
-        check_leaks("feed.json", feed_raw, errors)
+        # Scan decoded keys and values: JSON Unicode escapes must not hide a leak.
+        check_leaks("feed.json", json.dumps(feed, ensure_ascii=False), errors)
     if status is not LOAD_FAILED:
         errors += validate_status(status)
-        check_leaks("live-status.json", status_raw, errors)
+        check_leaks("live-status.json", json.dumps(status, ensure_ascii=False), errors)
     if feed is not LOAD_FAILED and status is not LOAD_FAILED:
         warnings += cross_warnings(feed, status)
     return errors, warnings

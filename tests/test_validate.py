@@ -108,6 +108,23 @@ class Directory(unittest.TestCase):
         (Path(d) / "feed.json").write_text(feed, encoding="utf-8")
         (Path(d) / "live-status.json").write_text(status, encoding="utf-8")
 
+    def test_leak_checks_decode_json_escapes_in_keys_and_values(self):
+        for target in ("feed.json", "live-status.json"):
+            for content in ("10.0.0.5", "/home/example/private"):
+                for as_key in (False, True):
+                    with self.subTest(target=target, content=content, as_key=as_key):
+                        with tempfile.TemporaryDirectory() as d:
+                            self.write(d, json.dumps(FEED), json.dumps(STATUS))
+                            path = Path(d) / target
+                            data = json.loads(path.read_text())
+                            data[content if as_key else "extra"] = "extra" if as_key else content
+                            raw = json.dumps(data).replace(
+                                content, "".join("\\u%04x" % ord(char) for char in content)
+                            )
+                            path.write_text(raw, encoding="utf-8")
+                            errors, _ = v.validate_dir(d)
+                            self.assertTrue(any("contains" in error for error in errors))
+
     def test_invalid_json_and_main_exit_code(self):
         with tempfile.TemporaryDirectory() as d:
             self.write(d, "{", json.dumps(STATUS))
