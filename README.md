@@ -15,12 +15,28 @@
 
 更新时应先完整生成并验证 JSON，再替换文件。保持条目 ID 稳定，使用带时区的 ISO 8601 时间，并确保公开链接可访问。不要仅为表示程序仍在运行而改写 `feed.json` 的产出更新时间。
 
-可在本地检查语法：
+## 格式与校验
+
+字段定义见 JSON Schema（Draft 2020-12）：
+
+- `schema/feed.schema.json`
+- `schema/live-status.schema.json`
+
+Schema 允许额外字段，便于生成端新增数据而不破坏读取方；删除或改名字段前应先更新消费端。
+
+`scripts/validate.py` 只依赖 Python 标准库，生成端可在替换文件前运行：
 
 ```bash
-python3 -m json.tool feed.json > /dev/null
-python3 -m json.tool live-status.json > /dev/null
+python3 scripts/validate.py            # 校验本仓库
+python3 scripts/validate.py /path/dir  # 校验其他目录中的新快照
 ```
+
+除 Schema 规则外，它还检查：条目 `id` 不重复、`updated_utc` 为 UTC、`mem` 与输出计数一致，
+以及文件中不含内网/Tailscale IP、本地路径、私钥或令牌。`live-status.json` 的 `outputs.public`
+与 `feed.json` 条目数不一致时只给出警告（两个文件独立生成）。返回码：0 通过，1 有错误。
+
+测试：`python3 -m unittest discover -s tests`。GitHub Actions（`.github/workflows/validate.yml`）
+在每次推送时运行校验和测试。
 
 ## 许可
 
