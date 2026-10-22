@@ -177,3 +177,22 @@ class SchemasMatchValidator(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EdgeCases(unittest.TestCase):
+    def test_unicode_titles_are_fine(self):
+        f = copy.deepcopy(FEED)
+        f["outputs"][0]["title"] = "联邦供应商情报 🚀 — v2"
+        self.assertEqual(v.validate_feed(f), [])
+
+    def test_empty_files_are_errors(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "feed.json").write_text("", encoding="utf-8")
+            (Path(d) / "live-status.json").write_text("", encoding="utf-8")
+            errors, _ = v.validate_dir(d)
+            self.assertEqual(sum("invalid JSON" in e for e in errors), 2)
+
+    def test_missing_files_are_errors(self):
+        with tempfile.TemporaryDirectory() as d:
+            errors, _ = v.validate_dir(d)
+            self.assertEqual(sum("cannot read" in e for e in errors), 2)
