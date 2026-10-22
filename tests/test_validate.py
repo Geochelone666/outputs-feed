@@ -54,6 +54,22 @@ class Feed(unittest.TestCase):
         f["outputs"][0]["url"] = "http://example.com"
         self.assertTrue(any(".url" in e for e in v.validate_feed(f)))
 
+    def test_malformed_https_links_are_rejected(self):
+        for url in ("https://", "https:///missing-host", "https://?query=only",
+                    "https://example.com:bad/x", "https://example.com:70000/x",
+                    "https://[broken/x", "https://example.com/a b", "https://example.com/\n"):
+            with self.subTest(url=url):
+                feed = copy.deepcopy(FEED)
+                feed["outputs"][0]["url"] = url
+                self.assertTrue(any(".url" in error for error in v.validate_feed(feed)))
+
+    def test_https_links_with_ports_queries_and_encoded_spaces_are_allowed(self):
+        for url in ("https://example.com:8443/a%20b?q=test#section", "https://[2001:db8::1]/x"):
+            with self.subTest(url=url):
+                feed = copy.deepcopy(FEED)
+                feed["outputs"][0]["url"] = url
+                self.assertEqual(v.validate_feed(feed), [])
+
     def test_missing_fields(self):
         f = {"updated": "nope", "outputs": [{}]}
         errs = v.validate_feed(f)

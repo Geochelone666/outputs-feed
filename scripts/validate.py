@@ -15,6 +15,7 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlsplit
 
 # Things that must never appear in a public snapshot (see README "发布约定").
 LEAK_PATTERNS = [
@@ -57,6 +58,18 @@ def nonempty_str(v):
     return isinstance(v, str) and v.strip() != ""
 
 
+def is_https_url(value):
+    if not isinstance(value, str) or not value.startswith("https://"):
+        return False
+    if any(char.isspace() or ord(char) < 32 for char in value):
+        return False
+    try:
+        parsed = urlsplit(value)
+        return bool(parsed.hostname) and (parsed.port is None or 0 <= parsed.port <= 65535)
+    except ValueError:
+        return False
+
+
 def check_leaks(name, raw, errors):
     for rx, what in LEAK_PATTERNS:
         m = rx.search(raw)
@@ -88,8 +101,8 @@ def validate_feed(data):
         if parse_dt(o.get("ts")) is None:
             errors.append(f"{where}.ts must be ISO 8601 with timezone")
         url = o.get("url")
-        if not (isinstance(url, str) and url.startswith("https://")):
-            errors.append(f"{where}.url must be an https:// URL")
+        if not is_https_url(url):
+            errors.append(f"{where}.url must be an https:// URL with a host and valid port, without unencoded whitespace")
         oid = o.get("id")
         if isinstance(oid, str):
             if oid in seen:
