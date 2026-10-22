@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Geochelone666/outputs-feed/schema/feed.schema.json",
+  "title": "outputs-feed feed.json",
+  "description": "Public list of approved outputs. Readers must show `updated` as the list's own timestamp. Extra fields are allowed so producers can add data without breaking readers.",
+  "type": "object",
+  "required": ["updated", "outputs"],
+  "properties": {
+    "updated": {
+      "description": "When the output list last changed (ISO 8601 with timezone).",
+      "type": "string",
+      "format": "date-time"
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/output" }
+    }
+  },
+  "$defs": {
+    "output": {
+      "type": "object",
+      "required": ["id", "ts", "project", "title", "type", "url", "summary"],
+      "properties": {
+        "id": { "description": "Stable unique id; never reused for a different output.", "type": "string", "minLength": 1 },
+        "ts": { "description": "Publish time (ISO 8601 with timezone).", "type": "string", "format": "date-time" },
+        "project": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "type": { "description": "Kind of output, e.g. \"link\".", "type": "string", "minLength": 1 },
+        "url": { "description": "Publicly reachable https URL.", "type": "string", "pattern": "^https://" },
+        "summary": { "type": "string" }
+      }
+    }
+  }
+}

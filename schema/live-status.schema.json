@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Geochelone666/outputs-feed/schema/live-status.schema.json",
+  "title": "outputs-feed live-status.json",
+  "description": "Aggregate status snapshot. `updated_utc` is independent of feed.json's `updated`; an old snapshot must not be shown as current. Extra fields are allowed.",
+  "type": "object",
+  "required": ["updated_utc", "vms", "cron_count", "outputs"],
+  "properties": {
+    "updated_utc": {
+      "description": "Snapshot time, UTC, ISO 8601 (e.g. 2026-10-22T03:53:56Z).",
+      "type": "string",
+      "format": "date-time"
+    },
+    "vms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "reachable"],
+        "properties": {
+          "name": { "description": "Public machine name (no addresses).", "type": "string", "minLength": 1 },
+          "reachable": { "description": "Result of the check at snapshot time only.", "type": "boolean" },
+          "load1": { "description": "1-minute load average; null when unreachable.", "type": ["number", "null"], "minimum": 0 },
+          "mem": { "description": "Memory \"used/total\" in MiB; null when unreachable.", "type": ["string", "null"], "pattern": "^[0-9]+/[0-9]+$" }
+        }
+      }
+    },
+    "cron_count": { "description": "Number of scheduled jobs.", "type": "integer", "minimum": 0 },
+    "outputs": {
+      "type": "object",
+      "required": ["total", "public"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "public": { "description": "Should equal the number of entries in feed.json.", "type": "integer", "minimum": 0 }
+      }
+    },
+    "world2_soak_tick": { "description": "Opaque progress marker; may be null." },
+    "shadow_last_run": { "description": "Last shadow run (ISO 8601) or null.", "type": ["string", "null"], "format": "date-time" }
+  }
+}
