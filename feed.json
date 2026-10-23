@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13T23:04:44.445369+00:00",
+  "updated": "2026-10-23T20:28:22.863804+00:00",
   "outputs": [
     {
       "id": "proc-supplier-report-v2",
@@ -18,6 +18,15 @@
       "type": "link",
       "url": "https://lwzcreations.gumroad.com/l/jhqxjs",
       "summary": "加拿大联邦供应商情报报告 v2.1，CAD$99，新增 Key insights 和 Peer benchmark"
+    },
+    {
+      "id": "ade:material28-ruling",
+      "ts": "2026-10-23T20:28:22.856792+00:00",
+      "project": "ade-step4-g2",
+      "title": "材料二十八裁决逐字全文（CHANGES REQUIRED · EXECUTION HOLD）",
+      "type": "report",
+      "url": "https://chatgpt.com/c/6adbb6b7-09f8-83e8-953e-3dc5bb155107",
+      "summary": "v6 核心修复确认成立；新增 N28-01/N28-02（P0 阻断）、N28-03/N28-04（P1）；S2-P1-03 证据 HOLD 需提交封存文件包；S2-P1-05 备案待 OCI 绑定记录；N28-05 IAM 权限审计；S4-G2 仍未签署"
     }
   ]
 }
