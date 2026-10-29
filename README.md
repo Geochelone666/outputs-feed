@@ -33,7 +33,7 @@ python3 scripts/validate.py /path/dir  # 校验其他目录中的新快照
 
 除 Schema 规则外，它还检查：条目 `id` 不重复、HTTPS 链接包含主机与合法端口且没有未编码空白、`updated_utc` 为 UTC、`mem` 与输出计数一致，
 以及文件中不含内网/Tailscale IP、本地路径、私钥或令牌。`live-status.json` 的 `outputs.public`
-与 `feed.json` 条目数不一致时只给出警告（两个文件独立生成）。返回码：0 通过，1 有错误。
+与 `feed.json` 条目数不一致时只给出警告（两个文件独立生成）。泄露检查的错误只包含文件名和类别，不重复输出匹配到的私有值。返回码：0 通过，1 有错误。
 
 测试：`python3 -m unittest discover -s tests`。GitHub Actions（`.github/workflows/validate.yml`）
 在每次推送时运行校验和测试。

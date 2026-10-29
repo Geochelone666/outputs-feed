@@ -229,3 +229,39 @@ class EdgeCases(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             errors, _ = v.validate_dir(d)
             self.assertEqual(sum("cannot read" in e for e in errors), 2)
+
+
+class RedactedLeakDiagnostics(unittest.TestCase):
+    def test_matched_values_are_not_repeated_in_errors(self):
+        # Synthetic strings only, never real credentials or private records.
+        for text, category in [
+            ('ghp_' + 'x' * 24, 'GitHub token'),
+            ('sk-' + 'y' * 24, 'API secret key'),
+            ('/home/synthetic-person/private.txt', 'local filesystem path'),
+            ('192.168.11.12', 'private IPv4'),
+        ]:
+            with self.subTest(category=category):
+                errors = []
+                v.check_leaks('feed.json', text, errors)
+                self.assertEqual(len(errors), 1)
+                self.assertIn('feed.json', errors[0])
+                self.assertIn(category, errors[0])
+                self.assertNotIn(text, errors[0])
+                self.assertNotIn('synthetic-person', errors[0])
+
+    def test_cli_failure_does_not_echo_rejected_value(self):
+        import contextlib
+        import io
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            feed = copy.deepcopy(FEED)
+            rejected = 'ghp_' + 'z' * 24
+            feed['outputs'][0]['summary'] = rejected
+            (root / 'feed.json').write_text(json.dumps(feed))
+            (root / 'live-status.json').write_text(json.dumps(STATUS))
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                code = v.main(['validate.py', str(root)])
+            self.assertEqual(code, 1)
+            self.assertIn('GitHub token', output.getvalue())
+            self.assertNotIn(rejected, output.getvalue())
