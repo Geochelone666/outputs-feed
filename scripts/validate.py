@@ -74,7 +74,7 @@ def check_leaks(name, raw, errors):
     for rx, what in LEAK_PATTERNS:
         m = rx.search(raw)
         if m:
-            errors.append(f"{name}: contains {what}: {m.group(0)!r}")
+            errors.append(f"{name}: contains {what} (value redacted)")
 
 
 def validate_feed(data):
