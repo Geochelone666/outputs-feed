@@ -118,6 +118,27 @@ class LeakGuard(unittest.TestCase):
         self.assertEqual(self.leaks(json.dumps(FEED) + json.dumps(STATUS)), [])
         self.assertEqual(self.leaks("load 100.5 and version 1.0.0.1"), [])
 
+    def test_flags_ipv6_loopback_linklocal_and_ula(self):
+        for text in ("::1", "fe80::1234", "fe80::1%eth0", "fd00::8", "fc12::abcd",
+                     "https://[::1]:8080/x", "[fd00::9]"):
+            self.assertTrue(self.leaks(text), text)
+
+    def test_flags_windows_profile_and_credential_paths(self):
+        for text in ("C:\\Users\\alice\\file.txt",      # decoded string
+                     "C:\\\\Users\\\\alice",          # JSON-escaped backslashes
+                     "D:\\Documents and Settings\\bob",
+                     "/.ssh/id_ed25519", "C:\\.aws\\credentials",
+                     "data/.gnupg/pubring.kbx", "x/.docker/config.json"):
+            self.assertTrue(self.leaks(text), text)
+
+    def test_allows_public_ipv6_and_lookalikes(self):
+        for text in ("2001:db8::1", "https://[2001:db8::1]/x",
+                     "2001:4860:4860::8888", "2606:4700:4700::1111",
+                     "16:03:43", "2026-10-13T15:44:23+00:00",
+                     "aa:bb:cc:dd:ee:ff", "C:\\Program Files\\app",
+                     "v2: stable", "feed.json"):
+            self.assertEqual(self.leaks(text), [], text)
+
 
 class Directory(unittest.TestCase):
     def write(self, d, feed, status):
@@ -170,6 +191,15 @@ class Directory(unittest.TestCase):
             (Path(d) / "feed.json").write_bytes(b'\xff')
             errors, _ = v.validate_dir(d)
             self.assertTrue(any("feed.json" in e and "cannot read" in e for e in errors))
+
+    def test_windows_path_leak_detected_through_json_escapes(self):
+        with tempfile.TemporaryDirectory() as d:
+            feed = copy.deepcopy(FEED)
+            feed["outputs"][0]["summary"] = "logs under C:\\Users\\alice\\AppData"
+            (Path(d) / "feed.json").write_text(json.dumps(feed), encoding="utf-8")
+            (Path(d) / "live-status.json").write_text(json.dumps(STATUS), encoding="utf-8")
+            errors, _ = v.validate_dir(d)
+            self.assertTrue(any("Windows user profile" in e for e in errors))
 
     def test_public_count_mismatch_is_only_a_warning(self):
         with tempfile.TemporaryDirectory() as d:
@@ -239,6 +269,8 @@ class RedactedLeakDiagnostics(unittest.TestCase):
             ('sk-' + 'y' * 24, 'API secret key'),
             ('/home/synthetic-person/private.txt', 'local filesystem path'),
             ('192.168.11.12', 'private IPv4'),
+            ('fd00::9', 'IPv6'),
+            ('C:\\Users\\synthetic-person', 'Windows user profile path'),
         ]:
             with self.subTest(category=category):
                 errors = []

@@ -9,6 +9,7 @@ public repo.
 Usage: python3 scripts/validate.py [REPO_DIR]
 Exit status: 0 valid (warnings may be printed), 1 errors found.
 """
+import ipaddress
 import json
 import math
 import re
@@ -25,6 +26,12 @@ LEAK_PATTERNS = [
     (re.compile(r"\b100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d{1,3}\.\d{1,3}\b"),
      "CGNAT/Tailscale IPv4 (100.64/10)"),
     (re.compile(r"(/home/|/Users/|~/)[\w.-]+"), "local filesystem path"),
+    # Windows user profile roots, with one (decoded) or two (JSON-escaped) backslashes.
+    (re.compile(r"(?i)\b[A-Za-z]:(?:\\{1,2})(?:Users|Documents and Settings)(?:\\{1,2})[\w.-]+"),
+     "Windows user profile path"),
+    # Credential/config directories under any root and either separator.
+    (re.compile(r"(?i)(?:\\{1,2}|/)\.(?:ssh|aws|gnupg|docker)(?:\\{1,2}|/)[\w.-]*"),
+     "credential/config directory path"),
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"), "private key"),
     (re.compile(r"\b(ghp|gho|github_pat)_[A-Za-z0-9_]{20,}"), "GitHub token"),
     (re.compile(r"\bsk-[A-Za-z0-9_-]{20,}"), "API secret key"),
@@ -70,11 +77,34 @@ def is_https_url(value):
         return False
 
 
+# Candidate substrings that might be IPv6 literals (a ':' is required). Kept
+# narrow so times ("16:03:43"), versions and MACs are skipped by parsing,
+# not by an ever-growing denylist of look-alikes.
+IPV6_CANDIDATE_RE = re.compile(r"(?<![0-9A-Za-z:.])[0-9A-Fa-f]*:[0-9A-Fa-f:.]*(?![0-9A-Za-z:.])")
+IPV6_ULA = ipaddress.ip_network("fc00::/7")
+
+
+def is_private_ipv6(candidate):
+    """True only for IPv6 literals that identify a non-public interface.
+
+    Public and documentation (2001:db8::/32) addresses must stay publishable,
+    so this is limited to loopback, link-local and unique-local ranges.
+    """
+    try:
+        ip = ipaddress.ip_address(candidate.split("%", 1)[0])
+    except ValueError:
+        return False
+    return (isinstance(ip, ipaddress.IPv6Address)
+            and (ip.is_loopback or ip.is_link_local or ip in IPV6_ULA))
+
+
 def check_leaks(name, raw, errors):
     for rx, what in LEAK_PATTERNS:
         m = rx.search(raw)
         if m:
             errors.append(f"{name}: contains {what} (value redacted)")
+    if any(is_private_ipv6(m.group(0)) for m in IPV6_CANDIDATE_RE.finditer(raw)):
+        errors.append(f"{name}: contains private/local IPv6 (loopback/link-local/ULA) (value redacted)")
 
 
 def validate_feed(data):
