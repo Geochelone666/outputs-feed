@@ -72,7 +72,9 @@ def is_https_url(value):
         return False
     try:
         parsed = urlsplit(value)
-        return bool(parsed.hostname) and (parsed.port is None or 0 <= parsed.port <= 65535)
+        # Public links never need embedded credentials; userinfo risks leaking one.
+        return (bool(parsed.hostname) and parsed.username is None
+                and (parsed.port is None or 0 <= parsed.port <= 65535))
     except ValueError:
         return False
 
@@ -82,20 +84,42 @@ def is_https_url(value):
 # not by an ever-growing denylist of look-alikes.
 IPV6_CANDIDATE_RE = re.compile(r"(?<![0-9A-Za-z:.])[0-9A-Fa-f]*:[0-9A-Fa-f:.]*(?![0-9A-Za-z:.])")
 IPV6_ULA = ipaddress.ip_network("fc00::/7")
+IPV6_NAT64_WKP = ipaddress.ip_network("64:ff9b::/96")
+# Same ranges as the IPv4 leak patterns above, plus loopback/link-local.
+PRIVATE_IPV4_NETS = [ipaddress.ip_network(n) for n in (
+    "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "100.64.0.0/10",
+    "127.0.0.0/8", "169.254.0.0/16")]
+
+
+def embedded_ipv4(ip):
+    """The public/private identity behind an IPv4-carrying IPv6 literal."""
+    if ip.ipv4_mapped is not None:
+        return ip.ipv4_mapped
+    if ip.sixtofour is not None:
+        return ip.sixtofour
+    if ip in IPV6_NAT64_WKP:
+        return ipaddress.IPv4Address(ip.packed[-4:])
+    return None
 
 
 def is_private_ipv6(candidate):
     """True only for IPv6 literals that identify a non-public interface.
 
     Public and documentation (2001:db8::/32) addresses must stay publishable,
-    so this is limited to loopback, link-local and unique-local ranges.
+    so this is limited to loopback, link-local, unique-local ranges, and
+    IPv4-mapped/6to4/NAT64 forms whose embedded IPv4 is non-public (their
+    hex form otherwise hides the address from the IPv4 patterns).
     """
     try:
         ip = ipaddress.ip_address(candidate.split("%", 1)[0])
     except ValueError:
         return False
-    return (isinstance(ip, ipaddress.IPv6Address)
-            and (ip.is_loopback or ip.is_link_local or ip in IPV6_ULA))
+    if not isinstance(ip, ipaddress.IPv6Address):
+        return False
+    if ip.is_loopback or ip.is_link_local or ip in IPV6_ULA:
+        return True
+    embedded = embedded_ipv4(ip)
+    return embedded is not None and any(embedded in net for net in PRIVATE_IPV4_NETS)
 
 
 def check_leaks(name, raw, errors):
@@ -132,7 +156,7 @@ def validate_feed(data):
             errors.append(f"{where}.ts must be ISO 8601 with timezone")
         url = o.get("url")
         if not is_https_url(url):
-            errors.append(f"{where}.url must be an https:// URL with a host and valid port, without unencoded whitespace")
+            errors.append(f"{where}.url must be an https:// URL with a host and valid port, without unencoded whitespace or embedded credentials")
         oid = o.get("id")
         if isinstance(oid, str):
             if oid in seen:
