@@ -1,29 +1,29 @@
 {
-  "updated_utc": "2026-11-02T22:03:37Z",
+  "updated_utc": "2026-11-02T22:13:32Z",
   "vms": [
     {
       "name": "atlas",
       "reachable": true,
       "load1": 0.15,
-      "mem": "1310/11925"
+      "mem": "1329/11925"
     },
     {
       "name": "butler",
       "reachable": true,
-      "load1": 0.07,
-      "mem": "348/952"
+      "load1": 0.13,
+      "mem": "336/952"
     },
     {
       "name": "gatekeeper",
       "reachable": true,
-      "load1": 0.11,
-      "mem": "346/952"
+      "load1": 0.05,
+      "mem": "348/952"
     },
     {
       "name": "watcher",
       "reachable": true,
-      "load1": 0.11,
-      "mem": "731/964"
+      "load1": 0.02,
+      "mem": "735/964"
     }
   ],
   "cron_count": 46,
