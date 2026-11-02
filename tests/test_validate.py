@@ -63,6 +63,12 @@ class Feed(unittest.TestCase):
                 feed["outputs"][0]["url"] = url
                 self.assertTrue(any(".url" in error for error in v.validate_feed(feed)))
 
+    def test_https_links_with_credentials_are_rejected(self):
+        for url in ("https://user@example.com/x",
+                    "https://deploy:s3cret-token@example.com/x",
+                    "https://user:pass@example.com:8443/x?y=1"):
+            self.assertFalse(v.is_https_url(url), url)
+
     def test_https_links_with_ports_queries_and_encoded_spaces_are_allowed(self):
         for url in ("https://example.com:8443/a%20b?q=test#section", "https://[2001:db8::1]/x"):
             with self.subTest(url=url):
@@ -122,6 +128,25 @@ class LeakGuard(unittest.TestCase):
         for text in ("::1", "fe80::1234", "fe80::1%eth0", "fd00::8", "fc12::abcd",
                      "https://[::1]:8080/x", "[fd00::9]"):
             self.assertTrue(self.leaks(text), text)
+
+    def test_flags_private_ipv4_embedded_in_ipv6(self):
+        for text in ("::ffff:a00:1",          # IPv4-mapped 10.0.0.1, hex form
+                     "::ffff:6440:4302",      # IPv4-mapped 100.64.67.2 (CGNAT)
+                     "::ffff:ac10:1",         # IPv4-mapped 172.16.0.1
+                     "::ffff:c0a8:101",       # IPv4-mapped 192.168.1.1
+                     "::ffff:7f00:1",         # IPv4-mapped 127.0.0.1 (loopback)
+                     "2002:a00:1::",          # 6to4 of 10.0.0.1
+                     "64:ff9b::a00:1",        # NAT64 well-known prefix, 10.0.0.1
+                     "[::ffff:a00:1]"):
+            self.assertTrue(self.leaks(text), text)
+
+    def test_allows_public_ipv4_embedded_in_ipv6(self):
+        for text in ("::ffff:808:808",        # IPv4-mapped 8.8.8.8
+                     "::ffff:8.8.8.8",
+                     "2002:808:808::",        # 6to4 of 8.8.8.8
+                     "64:ff9b::808:808",      # NAT64 of 8.8.8.8
+                     "::ffff:cb00:7101"):     # 203.0.113.1 (documentation)
+            self.assertEqual(self.leaks(text), [], text)
 
     def test_flags_windows_profile_and_credential_paths(self):
         for text in ("C:\\Users\\alice\\file.txt",      # decoded string
