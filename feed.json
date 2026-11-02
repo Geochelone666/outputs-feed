@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02T01:03:29.971008+00:00",
+  "updated": "2026-11-02T01:04:06.085528+00:00",
   "outputs": [
     {
       "id": "proc-supplier-report-v2",
@@ -27,15 +27,6 @@
       "type": "report",
       "url": "https://chatgpt.com/c/6adbb6b7-09f8-83e8-953e-3dc5bb155107",
       "summary": "v6 核心修复确认成立；新增 N28-01/N28-02（P0 阻断）、N28-03/N28-04（P1）；S2-P1-03 证据 HOLD 需提交封存文件包；S2-P1-05 备案待 OCI 绑定记录；N28-05 IAM 权限审计；S4-G2 仍未签署"
-    },
-    {
-      "id": "living-world:day_032:20261101:r1",
-      "ts": "2026-11-02T01:03:29.964545+00:00",
-      "project": "living-world",
-      "title": "Living World Day 32",
-      "type": "file",
-      "url": "",
-      "summary": "Day 32 chapter, 5861 words, ledger-faithful"
     }
   ]
 }
