@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-12T04:03:33Z",
+  "updated_utc": "2026-11-12T04:13:29Z",
   "vms": [
     {
       "name": "atlas",
@@ -22,8 +22,8 @@
     {
       "name": "watcher",
       "reachable": true,
-      "load1": 0.23,
-      "mem": "712/964"
+      "load1": 0.04,
+      "mem": "714/964"
     }
   ],
   "cron_count": 47,
